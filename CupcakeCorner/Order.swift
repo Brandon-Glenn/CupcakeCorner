@@ -37,7 +37,11 @@ class Order: ObservableObject, Codable {
     @Published var addSprinkles = false
     
     var hasValidAddress: Bool {
-        
+        let name = self.name.trimmingCharacters(in: .whitespacesAndNewlines)
+        let streetAddress = self.streetAddress.trimmingCharacters(in: .whitespacesAndNewlines)
+        let city = self.city.trimmingCharacters(in: .whitespacesAndNewlines)
+        let zip = self.zip.trimmingCharacters(in: .whitespacesAndNewlines)
+
         if name.isEmpty || streetAddress.isEmpty || city.isEmpty || zip.isEmpty {
             return false
         }
