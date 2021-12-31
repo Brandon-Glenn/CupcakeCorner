@@ -25,7 +25,7 @@ struct CheckoutView: View {
                     }
                     .frame(height: 233)
                 }
-                Text("Your total cost is \(order.cost, format: .currency(code: "USD"))")
+                Text("Your total cost is \(order.orderDetails.cost, format: .currency(code: "USD"))")
                     .font(.title)
                 
                 
@@ -49,7 +49,7 @@ struct CheckoutView: View {
     
     
     func placeOrder() async {
-        guard let encoded = try? JSONEncoder().encode(order) else {
+        guard let encoded = try? JSONEncoder().encode(order.orderDetails) else {
             print ("Failed to Encode Order")
             return
         }
@@ -62,8 +62,9 @@ struct CheckoutView: View {
         
         do {
             let (data, _) = try await URLSession.shared.upload(for: request, from: encoded)
+            print(data)
             // handle the result
-            let decodedOrder = try JSONDecoder().decode(Order.self, from: data)
+            let decodedOrder = try JSONDecoder().decode(OrderDetails.self, from: data)
             confirmationMessage = "Your Order for \(decodedOrder.quantity) \(Order.types[decodedOrder.type].lowercased()) cupcakes is on the way"
         
             showingConfirmation = true
